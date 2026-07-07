@@ -20,21 +20,28 @@ function MatchView() {
     setError(null)
     setCounterfactualActive(false)
     setSelectedEvent(null)
+    window.scrollTo(0, 0)
     getMatch(matchId)
       .then(setMatch)
       .catch((err) => setError(err.message))
   }, [matchId])
 
   if (error) {
-    return <div className="min-h-screen p-8 text-red-600">Failed to load match: {error}</div>
+    return (
+      <div className="mx-auto min-h-screen max-w-6xl px-6 py-24 md:px-10">
+        <p className="eyebrow">Something went wrong</p>
+        <p className="mt-4 text-rose">Couldn't load this match ({error}). Refresh to try again.</p>
+      </div>
+    )
   }
 
   if (!match) {
     return (
-      <div className="min-h-screen max-w-5xl mx-auto p-8">
-        <Skeleton className="h-4 w-24 mb-4" />
-        <Skeleton className="h-8 w-2/3 mb-6" />
-        <Skeleton className="h-[360px] w-full" />
+      <div className="mx-auto min-h-screen max-w-6xl px-6 pt-10 md:px-10">
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="mt-14 h-4 w-56" />
+        <Skeleton className="mt-5 h-20 w-2/3" />
+        <Skeleton className="mt-10 h-[420px] w-full" />
       </div>
     )
   }
@@ -47,14 +54,16 @@ function MatchView() {
     : null
 
   return (
-    <div className="min-h-screen max-w-5xl mx-auto p-8 animate-fade-in">
+    <div className="mx-auto min-h-screen max-w-6xl px-6 md:px-10">
       <MatchHeader match={match} />
       <ProbabilityTimeline
         timeline={match.timeline}
         maxMinute={match.timeline[match.timeline.length - 1]?.minute || 90}
         matchpointEventId={match.matchpoint.event_id}
+        matchpointMinute={match.matchpoint.minute}
         counterfactualData={counterfactualData}
         onEventClick={setSelectedEvent}
+        homeTeam={match.home_team}
       />
       {selectedEvent && (
         <EventDetailPanel
@@ -74,6 +83,7 @@ function MatchView() {
           onToggle={() => setCounterfactualActive((prev) => !prev)}
         />
       </MatchPointPanel>
+      <div className="pb-16" />
     </div>
   )
 }

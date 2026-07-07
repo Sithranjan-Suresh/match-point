@@ -14,32 +14,43 @@ function MatchHeader({ match }) {
   }
 
   return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between">
-        <Link to="/" className="text-sm text-purple-600 hover:underline">
-          ← All matches
+    <header className="pt-10 pb-12">
+      <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.2em]">
+        <Link to="/" className="text-rose transition-colors hover:text-gold">
+          ← All fixtures
         </Link>
         <button
           type="button"
           onClick={handleShare}
-          className="text-sm text-slate-400 hover:text-purple-600"
+          className="cursor-pointer border border-maroon-soft px-3 py-1.5 text-rose transition-colors hover:border-gold hover:text-gold"
         >
-          {copied ? 'Link copied!' : 'Share this MatchPoint'}
+          {copied ? 'Link copied' : 'Copy link'}
         </button>
       </div>
-      <div className="mt-2 flex items-baseline justify-between flex-wrap gap-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-          {match.home_team} {match.score_home} — {match.score_away} {match.away_team}
-        </h1>
-        <span className="text-sm font-medium text-slate-400">{match.stage}</span>
-      </div>
+
+      <p className="eyebrow hero-rise mt-12" style={{ animationDelay: '0ms' }}>
+        {match.stage} · Qatar 2022
+      </p>
+      <h1
+        className="display hero-rise mt-4 flex flex-wrap items-baseline gap-x-5 text-[clamp(2.6rem,7vw,5.5rem)]"
+        style={{ animationDelay: '120ms' }}
+      >
+        <span>{match.home_team}</span>
+        <span className="font-mono text-[0.55em] font-semibold tabular-nums text-gold">
+          {match.score_home}–{match.score_away}
+        </span>
+        <span>{match.away_team}</span>
+      </h1>
       {match.decided_on_penalties && (
-        <p className="mt-1 text-sm text-slate-500">
-          This match was decided on penalties — MatchPoint reflects the highest-impact event in
-          regulation/extra time.
+        <p
+          className="hero-rise mt-4 font-mono text-xs uppercase tracking-[0.16em] text-rose"
+          style={{ animationDelay: '220ms' }}
+        >
+          Decided on penalties — the MatchPoint below is the highest-impact moment of
+          regulation and extra time.
         </p>
       )}
-    </div>
+    </header>
   )
 }
 

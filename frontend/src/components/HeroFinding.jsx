@@ -1,20 +1,39 @@
 function HeroFinding({ summary }) {
-  if (!summary) return null
-
   return (
-    <div className="mb-10">
-      <p className="text-sm font-medium uppercase tracking-wide text-purple-600">
-        2022 FIFA World Cup — {summary.total_matches} matches analyzed
+    <header className="pt-16 pb-20 md:pt-24 md:pb-28">
+      <p className="eyebrow hero-rise" style={{ animationDelay: '0ms' }}>
+        Qatar 2022 · 64 matches · 10,000 simulated futures per moment
       </p>
-      <h1 className="mt-2 text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
-        {summary.pct_matchpoints_before_60}% of decisive moments happened before the 60th
-        minute — and {summary.pct_matchpoints_not_goals}% of them weren't goals at all.
+      <h1 className="display mt-8 text-[clamp(3.4rem,10vw,8.5rem)]">
+        <span className="hero-rise block" style={{ animationDelay: '120ms' }}>
+          The match was
+        </span>
+        <span className="hero-rise block" style={{ animationDelay: '240ms' }}>
+          decided before
+        </span>
+        <span
+          className="hero-rise block italic text-gold"
+          style={{ animationDelay: '360ms', fontWeight: 600 }}
+        >
+          you knew it.
+        </span>
       </h1>
-      <p className="mt-3 text-slate-500 max-w-2xl">
-        Most matches are won or lost long before the scoreline reflects it. MatchPoint finds
-        the exact moment — averaging a {summary.avg_delta}-point swing in win probability.
+      <p
+        className="hero-rise mt-8 max-w-xl text-base leading-relaxed text-rose md:text-lg"
+        style={{ animationDelay: '500ms' }}
+      >
+        MatchPoint re-simulates every shot, card, and substitution of the 2022 World Cup to find
+        the single event each match could not come back from
+        {summary ? (
+          <>
+            {' '}
+            — and {summary.pct_matchpoints_before_60}% of them arrived before the hour mark.
+          </>
+        ) : (
+          '.'
+        )}
       </p>
-    </div>
+    </header>
   )
 }
 

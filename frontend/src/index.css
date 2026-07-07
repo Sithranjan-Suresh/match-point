@@ -1,43 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --color-night: #160409;
+  --color-night-2: #200710;
+  --color-surface: #2a0a15;
+  --color-maroon: #8a1538;
+  --color-maroon-soft: #4a0e22;
+  --color-gold: #e8b54a;
+  --color-chalk: #f6eee3;
+  --color-rose: #c08a9b;
+  --color-ice: #9cd3c4;
+
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Instrument Sans", system-ui, sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, monospace;
+}
+
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
-  background: #fff;
-  color: #0f172a;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-body);
+  color: var(--color-chalk);
+  background:
+    radial-gradient(1100px 620px at 72% -12%, rgba(232, 181, 74, 0.07), transparent 62%),
+    radial-gradient(900px 540px at 8% -4%, rgba(138, 21, 56, 0.28), transparent 58%),
+    var(--color-night);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
 }
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-night);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ---------- type voices ---------- */
+
+.display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: 0.005em;
+  font-weight: 700;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--color-rose);
+}
+
+.eyebrow-rule {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.eyebrow-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-maroon), transparent);
+}
+
+/* ---------- entrance & scroll motion ---------- */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-rise {
+  opacity: 0;
+  animation: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- signature: decisive minute strip ---------- */
+
+.strip-tick {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.is-visible .strip-tick {
+  transform: scaleY(1);
+}
+
+.strip-tick:hover {
+  filter: brightness(1.4);
+}
+
+/* ---------- fixtures ---------- */
+
+.fixture {
+  position: relative;
+  display: block;
+  padding: 18px 20px;
+  border: 1px solid rgba(138, 21, 56, 0.45);
+  background: rgba(42, 10, 21, 0.55);
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.fixture::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-gold);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.fixture:hover {
+  background: rgba(74, 14, 34, 0.75);
+  border-color: rgba(232, 181, 74, 0.45);
+  transform: translateY(-2px);
+}
+
+.fixture:hover::before {
+  transform: scaleY(1);
+}
+
+/* ---------- matchpoint pulse (chart) ---------- */
 
 @keyframes matchpoint-pulse {
   0% {
     r: 8;
-    opacity: 0.6;
+    opacity: 0.7;
   }
   100% {
-    r: 18;
+    r: 20;
     opacity: 0;
   }
 }
 
 .matchpoint-ring {
   transform-origin: center;
-  animation: matchpoint-pulse 1.6s ease-out infinite;
+  animation: matchpoint-pulse 1.8s ease-out infinite;
 }
 
-@keyframes fade-in {
+/* ---------- skeleton shimmer ---------- */
+
+@keyframes shimmer {
   from {
-    opacity: 0;
-    transform: translateY(4px);
+    background-position: -400px 0;
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    background-position: 400px 0;
   }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.2s ease-out;
+.skeleton {
+  border-radius: 4px;
+  background: var(--color-surface);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-surface) 0%,
+    var(--color-maroon-soft) 40%,
+    var(--color-surface) 80%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .hero-rise,
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .strip-tick {
+    transform: scaleY(1) !important;
+  }
 }

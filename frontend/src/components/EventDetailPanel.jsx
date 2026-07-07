@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { eventFillColor } from '../eventColors'
 
 function EventDetailPanel({ event, prevProbHome, onClose }) {
   const panelRef = useRef(null)
@@ -19,28 +20,42 @@ function EventDetailPanel({ event, prevProbHome, onClose }) {
   }, [onClose])
 
   if (!event) return null
+  const color = eventFillColor(event.event_type)
 
   return (
     <div
       ref={panelRef}
-      className="mt-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm relative"
+      className="relative mt-4 border bg-surface p-5"
+      style={{ borderColor: `${color}66` }}
     >
       <button
         type="button"
         onClick={onClose}
         aria-label="Close"
-        className="absolute top-3 right-3 text-slate-400 hover:text-slate-600"
+        className="absolute top-4 right-4 cursor-pointer font-mono text-rose transition-colors hover:text-chalk"
       >
         ✕
       </button>
-      <p className="text-xs font-medium text-slate-400">{event.minute}' — {event.event_type}</p>
-      <p className="mt-1 font-semibold text-slate-900">
-        {event.player} {event.team ? `(${event.team})` : ''}
+      <p className="font-mono text-[11px] uppercase tracking-[0.2em]" style={{ color }}>
+        {event.minute}' · {event.event_type}
       </p>
-      <div className="mt-2 flex gap-6 text-sm text-slate-600">
-        <span>Before: {prevProbHome}%</span>
-        <span>After: {event.prob_home}%</span>
-        <span className="font-medium text-slate-900">Δ {event.delta >= 0 ? '+' : ''}{event.delta}%</span>
+      <p className="display mt-2 text-2xl text-chalk">
+        {event.player} {event.team ? <span className="text-rose">· {event.team}</span> : ''}
+      </p>
+      <div className="mt-4 flex flex-wrap gap-8 font-mono text-sm tabular-nums text-rose">
+        <span>
+          before <span className="text-chalk">{prevProbHome}%</span>
+        </span>
+        <span>
+          after <span className="text-chalk">{event.prob_home}%</span>
+        </span>
+        <span>
+          Δ{' '}
+          <span className="text-gold">
+            {event.delta >= 0 ? '+' : ''}
+            {event.delta}%
+          </span>
+        </span>
       </div>
     </div>
   )

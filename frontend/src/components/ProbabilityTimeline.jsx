@@ -9,7 +9,9 @@ import {
   ReferenceLine,
   ResponsiveContainer,
 } from 'recharts'
-import { eventFillColor } from '../eventColors'
+import { eventFillColor, EVENT_FILL_COLORS } from '../eventColors'
+
+const AXIS_TICK = { fill: '#c08a9b', fontFamily: '"Spline Sans Mono", monospace', fontSize: 11 }
 
 function makeEventDot(matchpointEventId, onEventClick) {
   return function EventDot(props) {
@@ -22,8 +24,8 @@ function makeEventDot(matchpointEventId, onEventClick) {
     if (isMatchPoint) {
       return (
         <g onClick={handleClick} style={{ cursor: 'pointer' }}>
-          <circle cx={cx} cy={cy} r={8} className="matchpoint-ring" fill="none" stroke={color} strokeWidth={2} />
-          <circle cx={cx} cy={cy} r={8} fill={color} stroke="#fff" strokeWidth={2} />
+          <circle cx={cx} cy={cy} r={8} className="matchpoint-ring" fill="none" stroke="#e8b54a" strokeWidth={2} />
+          <circle cx={cx} cy={cy} r={8} fill="#e8b54a" stroke="#160409" strokeWidth={2} />
         </g>
       )
     }
@@ -32,9 +34,9 @@ function makeEventDot(matchpointEventId, onEventClick) {
       <circle
         cx={cx}
         cy={cy}
-        r={5}
+        r={4.5}
         fill={color}
-        stroke="#fff"
+        stroke="#160409"
         strokeWidth={1.5}
         onClick={handleClick}
         style={{ cursor: 'pointer' }}
@@ -43,52 +45,117 @@ function makeEventDot(matchpointEventId, onEventClick) {
   }
 }
 
-function ProbabilityTimeline({ timeline, maxMinute, matchpointEventId, counterfactualData, onEventClick }) {
+function ChartTooltip({ active, payload }) {
+  if (!active || !payload?.length) return null
+  const e = payload[0].payload
+  return (
+    <div className="border border-maroon bg-surface px-3 py-2 font-mono text-[11px] text-chalk">
+      <span className="text-gold">{e.minute}'</span>
+      {e.event_type && e.event_type !== 'Kick Off' && <> · {e.event_type}</>}
+      {e.player && <> · {e.player}</>}
+      <div className="mt-1 text-rose">home win {e.prob_home}%</div>
+    </div>
+  )
+}
+
+const LEGEND = ['Goal', 'Missed Shot', 'Yellow Card', 'Substitution']
+
+function ProbabilityTimeline({
+  timeline,
+  maxMinute,
+  matchpointEventId,
+  matchpointMinute,
+  counterfactualData,
+  onEventClick,
+  homeTeam,
+}) {
   const annotatedEvents = timeline.filter((e) => e.annotate)
   const EventDot = makeEventDot(matchpointEventId, onEventClick)
 
   return (
-    <div className="w-full overflow-x-auto">
-      <div style={{ minWidth: 600, height: 360 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={timeline} margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis
-              dataKey="minute"
-              type="number"
-              domain={[0, maxMinute]}
-              tickFormatter={(m) => `${m}'`}
-              stroke="#94a3b8"
-            />
-            <YAxis domain={[0, 100]} tickFormatter={(v) => `${v}%`} stroke="#94a3b8" />
-            <ReferenceLine y={50} stroke="#cbd5e1" strokeDasharray="4 4" />
-            <Tooltip
-              formatter={(value) => `${value}%`}
-              labelFormatter={(minute) => `Minute ${minute}`}
-            />
-            <Line
-              type="monotone"
-              dataKey="prob_home"
-              stroke="#7c3aed"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={false}
-            />
-            <Scatter data={annotatedEvents} dataKey="prob_home" shape={EventDot} isAnimationActive={false} />
-            {counterfactualData && (
+    <div className="border border-maroon-soft bg-night-2/60 p-4 md:p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-rose">
+          {homeTeam} win probability · 0–120'
+        </span>
+        <span className="flex flex-wrap gap-4 font-mono text-[10px] uppercase tracking-[0.14em] text-rose">
+          {LEGEND.map((type) => (
+            <span key={type} className="flex items-center gap-1.5">
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ background: EVENT_FILL_COLORS[type] }}
+              />
+              {type}
+            </span>
+          ))}
+        </span>
+      </div>
+
+      <div className="w-full overflow-x-auto">
+        <div style={{ minWidth: 620, height: 380 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={timeline} margin={{ top: 14, right: 24, bottom: 8, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(138,21,56,0.3)" />
+              <XAxis
+                dataKey="minute"
+                type="number"
+                domain={[0, maxMinute]}
+                tickFormatter={(m) => `${m}'`}
+                tick={AXIS_TICK}
+                stroke="rgba(138,21,56,0.6)"
+              />
+              <YAxis
+                domain={[0, 100]}
+                tickFormatter={(v) => `${v}%`}
+                tick={AXIS_TICK}
+                stroke="rgba(138,21,56,0.6)"
+              />
+              <ReferenceLine y={50} stroke="rgba(192,138,155,0.45)" strokeDasharray="4 4" />
+              {matchpointMinute != null && (
+                <ReferenceLine
+                  x={matchpointMinute}
+                  stroke="#e8b54a"
+                  strokeDasharray="5 4"
+                  strokeOpacity={0.75}
+                  label={{
+                    value: 'MATCHPOINT',
+                    position: 'insideBottomRight',
+                    dy: -6,
+                    fill: '#e8b54a',
+                    fontFamily: '"Spline Sans Mono", monospace',
+                    fontSize: 10,
+                    letterSpacing: '0.18em',
+                  }}
+                />
+              )}
+              <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'rgba(232,181,74,0.35)' }} />
               <Line
                 type="monotone"
-                data={counterfactualData}
                 dataKey="prob_home"
-                stroke="#f43f5e"
-                strokeWidth={2}
-                strokeDasharray="6 4"
+                stroke="#f6eee3"
+                strokeWidth={2.5}
                 dot={false}
-                isAnimationActive={false}
+                isAnimationActive={true}
+                animationDuration={1600}
+                animationEasing="ease-out"
               />
-            )}
-          </ComposedChart>
-        </ResponsiveContainer>
+              <Scatter data={annotatedEvents} dataKey="prob_home" shape={EventDot} isAnimationActive={false} />
+              {counterfactualData && (
+                <Line
+                  type="monotone"
+                  data={counterfactualData}
+                  dataKey="prob_home"
+                  stroke="#9cd3c4"
+                  strokeWidth={2}
+                  strokeDasharray="7 5"
+                  dot={false}
+                  isAnimationActive={true}
+                  animationDuration={900}
+                />
+              )}
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   )

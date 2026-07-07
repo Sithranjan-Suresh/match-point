@@ -6,24 +6,29 @@ function CounterfactualPanel({ matchpoint, homeTeam, active, onToggle }) {
     : 100 - matchpoint.counterfactual_prob_home_at_moment
 
   return (
-    <div className="mt-4 border-t border-slate-100 pt-4">
+    <div className="mt-10 border-t border-maroon-soft pt-8">
+      <p className="eyebrow mb-4" style={{ color: 'var(--color-ice)' }}>
+        The other timeline
+      </p>
       <button
         type="button"
         onClick={onToggle}
-        className="text-sm font-medium text-purple-600 hover:underline"
+        className="cursor-pointer border border-ice/60 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.18em] text-ice transition-colors hover:bg-ice/10"
       >
-        {active ? 'Hide counterfactual' : 'What if this had gone the other way?'}
+        {active ? 'Hide the other timeline' : 'Show the other timeline'}
       </button>
       {active && (
-        <div className="mt-2">
-          <p className="text-slate-700">
-            If {matchpoint.player}'s {matchpoint.event_type.toLowerCase()} had gone the other
-            way, {matchpoint.team}'s win probability at that moment would have been{' '}
-            <strong>{counterfactualProb.toFixed(1)}%</strong> instead of{' '}
-            <strong>{actualProb.toFixed(1)}%</strong>.
+        <div className="mt-6">
+          <p className="max-w-[58ch] text-base leading-relaxed text-chalk/90">
+            If {matchpoint.player}'s {matchpoint.event_type.toLowerCase()} had gone the other way,{' '}
+            {matchpoint.team}'s win probability at that moment would have been{' '}
+            <strong className="font-mono text-ice">{counterfactualProb.toFixed(1)}%</strong>{' '}
+            instead of <strong className="font-mono text-ice">{actualProb.toFixed(1)}%</strong>.
+            The dashed line above traces how the rest of the match would have projected from
+            that flipped state.
           </p>
-          <p className="mt-2 text-xs text-slate-400" title="Methodology">
-            Based on xG-state Monte Carlo simulation using StatsBomb open data.
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-rose">
+            Based on xG-state Monte Carlo simulation using StatsBomb open data
           </p>
         </div>
       )}

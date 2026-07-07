@@ -1,14 +1,14 @@
 export const EVENT_FILL_COLORS = {
-  Goal: '#10b981',
-  'Own Goal': '#14b8a6',
-  'Missed Shot': '#f59e0b',
-  'Yellow Card': '#eab308',
-  'Second Yellow': '#f97316',
-  'Red Card': '#ef4444',
-  Substitution: '#3b82f6',
+  Goal: '#e8b54a',
+  'Own Goal': '#d97742',
+  'Missed Shot': '#c08a9b',
+  'Yellow Card': '#e6c94f',
+  'Second Yellow': '#d97742',
+  'Red Card': '#e4553f',
+  Substitution: '#9cd3c4',
 }
 
-export const DEFAULT_FILL_COLOR = '#94a3b8'
+export const DEFAULT_FILL_COLOR = '#8d6b77'
 
 export function eventFillColor(eventType) {
   return EVENT_FILL_COLORS[eventType] || DEFAULT_FILL_COLOR

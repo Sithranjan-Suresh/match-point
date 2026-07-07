@@ -1,38 +1,51 @@
-function StatCard({ label, value, detail }) {
+import Reveal from './Reveal'
+import CountUp from './CountUp'
+
+function StatBoard({ value, decimals, suffix, label, detail, delay }) {
   return (
-    <div className="rounded-xl border border-slate-200 p-5 bg-white">
-      <p className="text-3xl font-bold text-slate-900">{value}</p>
-      <p className="mt-1 text-sm font-medium text-slate-700">{label}</p>
-      {detail && <p className="mt-1 text-xs text-slate-400">{detail}</p>}
-    </div>
+    <Reveal delay={delay}>
+      <div className="border-l-2 border-gold py-1 pl-6">
+        <p className="display text-6xl text-chalk md:text-7xl">
+          <CountUp value={value} decimals={decimals} />
+          <span className="text-[0.45em] text-rose">{suffix}</span>
+        </p>
+        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-gold">{label}</p>
+        <p className="mt-2 max-w-[26ch] text-sm leading-relaxed text-rose">{detail}</p>
+      </div>
+    </Reveal>
   )
 }
 
 function TournamentStats({ summary }) {
   if (!summary) return null
 
-  const topMatch = summary.top_delta_matches?.[0]
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-      <StatCard
-        label="MatchPoint moments were not goals"
-        value={`${summary.pct_matchpoints_not_goals}%`}
-        detail="Missed shots, cards, and substitutions occasionally swing a match more than the eventual goal"
+    <section className="grid grid-cols-1 gap-10 border-y border-maroon-soft py-14 sm:grid-cols-3 sm:gap-6">
+      <StatBoard
+        value={summary.pct_matchpoints_before_60}
+        decimals={1}
+        suffix="%"
+        label="Decided before 60'"
+        detail="Most matches tipped past the point of return with half an hour still to play."
+        delay={0}
       />
-      <StatCard
-        label="Average win-probability swing"
-        value={`${summary.avg_delta} pts`}
-        detail="Per MatchPoint moment, tournament-wide"
+      <StatBoard
+        value={summary.pct_matchpoints_not_goals}
+        decimals={1}
+        suffix="%"
+        label="Not goals at all"
+        detail="Missed sitters, cards, and substitutions — the moment often never made the highlight reel."
+        delay={120}
       />
-      {topMatch && (
-        <StatCard
-          label="Biggest swing of the tournament"
-          value={`${Math.abs(topMatch.matchpoint_delta).toFixed(1)} pts`}
-          detail={`${topMatch.home_team} vs ${topMatch.away_team} — ${topMatch.stage}`}
-        />
-      )}
-    </div>
+      <StatBoard
+        value={summary.avg_delta}
+        decimals={1}
+        suffix=" pts"
+        label="Average swing"
+        detail="How far win probability moved, on average, in the single most decisive moment."
+        delay={240}
+      />
+    </section>
   )
 }
 

@@ -1,13 +1,19 @@
+import Reveal from './Reveal'
 import EventSummary from './EventSummary'
 import NarrativeCard from './NarrativeCard'
 
 function MatchPointPanel({ matchpoint, homeTeam, narrative, children }) {
   return (
-    <div className="mt-6 rounded-xl border border-slate-200 bg-white p-5">
-      <EventSummary matchpoint={matchpoint} homeTeam={homeTeam} />
-      <NarrativeCard narrative={narrative} />
-      {children}
-    </div>
+    <Reveal>
+      <section className="mt-10 border border-maroon-soft bg-night-2/60 p-6 md:p-10">
+        <p className="eyebrow eyebrow-rule mb-8" style={{ color: 'var(--color-gold)' }}>
+          The MatchPoint
+        </p>
+        <EventSummary matchpoint={matchpoint} homeTeam={homeTeam} />
+        <NarrativeCard narrative={narrative} />
+        {children}
+      </section>
+    </Reveal>
   )
 }
 
