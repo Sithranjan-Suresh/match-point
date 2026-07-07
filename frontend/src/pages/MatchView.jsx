@@ -6,6 +6,7 @@ import ProbabilityTimeline from '../components/ProbabilityTimeline'
 import MatchPointPanel from '../components/MatchPointPanel'
 import CounterfactualPanel from '../components/CounterfactualPanel'
 import EventDetailPanel from '../components/EventDetailPanel'
+import Skeleton from '../components/Skeleton'
 
 function MatchView() {
   const { matchId } = useParams()
@@ -29,7 +30,13 @@ function MatchView() {
   }
 
   if (!match) {
-    return <div className="min-h-screen p-8 text-slate-500">Loading match...</div>
+    return (
+      <div className="min-h-screen max-w-5xl mx-auto p-8">
+        <Skeleton className="h-4 w-24 mb-4" />
+        <Skeleton className="h-8 w-2/3 mb-6" />
+        <Skeleton className="h-[360px] w-full" />
+      </div>
+    )
   }
 
   const counterfactualData = counterfactualActive
@@ -40,7 +47,7 @@ function MatchView() {
     : null
 
   return (
-    <div className="min-h-screen max-w-5xl mx-auto p-8">
+    <div className="min-h-screen max-w-5xl mx-auto p-8 animate-fade-in">
       <MatchHeader match={match} />
       <ProbabilityTimeline
         timeline={match.timeline}

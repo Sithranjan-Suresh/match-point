@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { saveScrollPosition } from '../scrollMemory'
 
 const EVENT_COLORS = {
   Goal: 'bg-emerald-100 text-emerald-700 border-emerald-300',
@@ -18,6 +19,7 @@ function MatchCard({ match }) {
   return (
     <Link
       to={`/match/${match.match_id}`}
+      onClick={saveScrollPosition}
       className="block rounded-lg border border-slate-200 p-4 bg-white hover:border-purple-400 hover:shadow-sm transition"
     >
       <div className="flex items-center justify-between">
