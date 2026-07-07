@@ -4,7 +4,7 @@ from pathlib import Path
 
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 DATA_DIR = Path(__file__).resolve().parent / "data" / "computed"
@@ -56,3 +56,12 @@ def get_matches(stage: Optional[str] = None) -> list[dict]:
     if stage is None:
         return _matches_index
     return [m for m in _matches_index if m["stage"] == stage]
+
+
+@app.get("/api/matches/{match_id}")
+def get_match(match_id: int) -> dict:
+    """Return the full match_detail object for a given match."""
+    detail = _match_details.get(match_id)
+    if detail is None:
+        raise HTTPException(status_code=404, detail=f"match_id {match_id} not found")
+    return detail
