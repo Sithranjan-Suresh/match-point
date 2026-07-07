@@ -4,7 +4,7 @@ from pathlib import Path
 
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 DATA_DIR = Path(__file__).resolve().parent / "data" / "computed"
@@ -42,6 +42,15 @@ def _load_data() -> None:
 @app.on_event("startup")
 def startup() -> None:
     _load_data()
+
+
+@app.middleware("http")
+async def add_cache_control(request: Request, call_next):
+    """All served data is static/pre-computed, so it's safe to cache aggressively."""
+    response = await call_next(request)
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "public, max-age=86400"
+    return response
 
 
 @app.get("/api/tournament")
