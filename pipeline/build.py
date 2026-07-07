@@ -106,9 +106,28 @@ def build_match(match_id: int, match_row: dict, generate_ai_narrative: bool = Tr
     }
 
 
-if __name__ == "__main__":
-    # Quick single-match smoke test: France vs Morocco semifinal.
+def build_all() -> list[dict]:
+    """Run the pipeline for all 64 World Cup matches and write matches_index.json."""
     metadata = get_match_metadata()
-    row = metadata[metadata.match_id == 3869552].iloc[0].to_dict()
-    summary = build_match(3869552, row)
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    match_ids = metadata["match_id"].tolist()
+
+    summaries = []
+    for i, match_id in enumerate(match_ids, start=1):
+        row = metadata[metadata.match_id == match_id].iloc[0].to_dict()
+        try:
+            summary = build_match(match_id, row)
+            summaries.append(summary)
+            logger.info("[%d/%d] done", i, len(match_ids))
+        except Exception as exc:
+            logger.error("[%d/%d] match_id=%s failed: %s", i, len(match_ids), match_id, exc)
+
+    COMPUTED_DIR.mkdir(parents=True, exist_ok=True)
+    with open(COMPUTED_DIR / "matches_index.json", "w", encoding="utf-8") as f:
+        json.dump(summaries, f, ensure_ascii=False)
+
+    logger.info("Wrote matches_index.json with %d matches", len(summaries))
+    return summaries
+
+
+if __name__ == "__main__":
+    build_all()
