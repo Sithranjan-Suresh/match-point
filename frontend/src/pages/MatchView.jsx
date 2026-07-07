@@ -29,6 +29,13 @@ function MatchView() {
     return <div className="min-h-screen p-8 text-slate-500">Loading match...</div>
   }
 
+  const counterfactualData = counterfactualActive
+    ? [
+        { minute: match.matchpoint.minute, prob_home: match.matchpoint.counterfactual_prob_home_at_moment },
+        ...match.counterfactual_timeline.map((e) => ({ minute: e.minute, prob_home: e.prob_home })),
+      ]
+    : null
+
   return (
     <div className="min-h-screen max-w-5xl mx-auto p-8">
       <MatchHeader match={match} />
@@ -36,6 +43,7 @@ function MatchView() {
         timeline={match.timeline}
         maxMinute={match.timeline[match.timeline.length - 1]?.minute || 90}
         matchpointEventId={match.matchpoint.event_id}
+        counterfactualData={counterfactualData}
       />
       <MatchPointPanel matchpoint={match.matchpoint} homeTeam={match.home_team} narrative={match.narrative}>
         <CounterfactualPanel

@@ -31,7 +31,7 @@ function makeEventDot(matchpointEventId) {
   }
 }
 
-function ProbabilityTimeline({ timeline, maxMinute, matchpointEventId }) {
+function ProbabilityTimeline({ timeline, maxMinute, matchpointEventId, counterfactualData }) {
   const annotatedEvents = timeline.filter((e) => e.annotate)
   const EventDot = makeEventDot(matchpointEventId)
 
@@ -63,6 +63,18 @@ function ProbabilityTimeline({ timeline, maxMinute, matchpointEventId }) {
               isAnimationActive={false}
             />
             <Scatter data={annotatedEvents} dataKey="prob_home" shape={EventDot} isAnimationActive={false} />
+            {counterfactualData && (
+              <Line
+                type="monotone"
+                data={counterfactualData}
+                dataKey="prob_home"
+                stroke="#f43f5e"
+                strokeWidth={2}
+                strokeDasharray="6 4"
+                dot={false}
+                isAnimationActive={false}
+              />
+            )}
           </ComposedChart>
         </ResponsiveContainer>
       </div>
