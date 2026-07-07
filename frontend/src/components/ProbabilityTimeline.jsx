@@ -1,6 +1,7 @@
 import {
   ComposedChart,
   Line,
+  Scatter,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -8,8 +9,17 @@ import {
   ReferenceLine,
   ResponsiveContainer,
 } from 'recharts'
+import { eventFillColor } from '../eventColors'
+
+function EventDot(props) {
+  const { cx, cy, payload } = props
+  if (cx == null || cy == null) return null
+  return <circle cx={cx} cy={cy} r={5} fill={eventFillColor(payload.event_type)} stroke="#fff" strokeWidth={1.5} />
+}
 
 function ProbabilityTimeline({ timeline, maxMinute }) {
+  const annotatedEvents = timeline.filter((e) => e.annotate)
+
   return (
     <div className="w-full overflow-x-auto">
       <div style={{ minWidth: 600, height: 360 }}>
@@ -37,6 +47,7 @@ function ProbabilityTimeline({ timeline, maxMinute }) {
               dot={false}
               isAnimationActive={false}
             />
+            <Scatter data={annotatedEvents} dataKey="prob_home" shape={EventDot} isAnimationActive={false} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>
