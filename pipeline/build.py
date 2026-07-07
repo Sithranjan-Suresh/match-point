@@ -6,6 +6,7 @@ from pathlib import Path
 from ingest import fetch_match_events, get_match_metadata
 from matchpoint import compute_counterfactual, decided_on_penalties, detect_matchpoint
 from narrative import generate_narrative
+from tournament import compute_tournament_summary
 from win_probability import build_match_timeline
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -124,8 +125,13 @@ def build_all() -> list[dict]:
     COMPUTED_DIR.mkdir(parents=True, exist_ok=True)
     with open(COMPUTED_DIR / "matches_index.json", "w", encoding="utf-8") as f:
         json.dump(summaries, f, ensure_ascii=False)
-
     logger.info("Wrote matches_index.json with %d matches", len(summaries))
+
+    tournament_summary = compute_tournament_summary(summaries)
+    with open(COMPUTED_DIR / "tournament_summary.json", "w", encoding="utf-8") as f:
+        json.dump(tournament_summary, f, ensure_ascii=False)
+    logger.info("Wrote tournament_summary.json")
+
     return summaries
 
 
