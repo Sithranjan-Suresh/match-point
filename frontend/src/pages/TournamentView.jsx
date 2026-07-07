@@ -30,6 +30,7 @@ function TournamentView() {
   const [tournamentSummary, setTournamentSummary] = useState(null)
   const [matches, setMatches] = useState([])
   const [error, setError] = useState(null)
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     Promise.all([getTournamentSummary(), getMatches()])
@@ -55,6 +56,12 @@ function TournamentView() {
   }
 
   const loading = !tournamentSummary || matches.length === 0
+  const query = search.trim().toLowerCase()
+  const filteredMatches = query
+    ? matches.filter(
+        (m) => m.home_team.toLowerCase().includes(query) || m.away_team.toLowerCase().includes(query)
+      )
+    : matches
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto p-8 animate-fade-in">
@@ -64,7 +71,14 @@ function TournamentView() {
         <>
           <HeroFinding summary={tournamentSummary} />
           <TournamentStats summary={tournamentSummary} />
-          <MatchGrid matches={matches} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by team name..."
+            className="mb-4 w-full max-w-sm rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+          />
+          <MatchGrid matches={filteredMatches} />
         </>
       )}
     </div>
