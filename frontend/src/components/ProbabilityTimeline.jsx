@@ -11,14 +11,29 @@ import {
 } from 'recharts'
 import { eventFillColor } from '../eventColors'
 
-function EventDot(props) {
-  const { cx, cy, payload } = props
-  if (cx == null || cy == null) return null
-  return <circle cx={cx} cy={cy} r={5} fill={eventFillColor(payload.event_type)} stroke="#fff" strokeWidth={1.5} />
+function makeEventDot(matchpointEventId) {
+  return function EventDot(props) {
+    const { cx, cy, payload } = props
+    if (cx == null || cy == null) return null
+    const isMatchPoint = payload.event_id === matchpointEventId
+    const color = eventFillColor(payload.event_type)
+
+    if (isMatchPoint) {
+      return (
+        <g>
+          <circle cx={cx} cy={cy} r={8} className="matchpoint-ring" fill="none" stroke={color} strokeWidth={2} />
+          <circle cx={cx} cy={cy} r={8} fill={color} stroke="#fff" strokeWidth={2} />
+        </g>
+      )
+    }
+
+    return <circle cx={cx} cy={cy} r={5} fill={color} stroke="#fff" strokeWidth={1.5} />
+  }
 }
 
-function ProbabilityTimeline({ timeline, maxMinute }) {
+function ProbabilityTimeline({ timeline, maxMinute, matchpointEventId }) {
   const annotatedEvents = timeline.filter((e) => e.annotate)
+  const EventDot = makeEventDot(matchpointEventId)
 
   return (
     <div className="w-full overflow-x-auto">

@@ -31,6 +31,7 @@ function MatchView() {
       <ProbabilityTimeline
         timeline={match.timeline}
         maxMinute={match.timeline[match.timeline.length - 1]?.minute || 90}
+        matchpointEventId={match.matchpoint.event_id}
       />
     </div>
   )
