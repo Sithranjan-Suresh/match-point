@@ -17,7 +17,7 @@ def detect_matchpoint(timeline: list[dict]) -> dict:
     """
     candidates = [(i, e) for i, e in enumerate(timeline) if e.get("event_id") != "kickoff"]
     idx, event = max(candidates, key=lambda pair: abs(pair[1]["delta"]))
-    prob_home_before = timeline[idx - 1]["prob_home"] if idx > 0 else timeline[0]["prob_home"]
+    prior = timeline[idx - 1] if idx > 0 else timeline[0]
 
     return {
         "event_id": event["event_id"],
@@ -27,8 +27,10 @@ def detect_matchpoint(timeline: list[dict]) -> dict:
         "event_type": event["event_type"],
         "player": event["player"],
         "team": event["team"],
-        "prob_home_before": prob_home_before,
+        "prob_home_before": prior["prob_home"],
+        "prob_away_before": prior["prob_away"],
         "prob_home_after": event["prob_home"],
+        "prob_away_after": event["prob_away"],
         "delta": event["delta"],
     }
 
