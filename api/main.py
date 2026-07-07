@@ -40,3 +40,9 @@ def _load_data() -> None:
 @app.on_event("startup")
 def startup() -> None:
     _load_data()
+
+
+@app.get("/api/tournament")
+def get_tournament() -> dict:
+    """Return tournament-wide aggregate findings across all 64 matches."""
+    return _tournament_summary
