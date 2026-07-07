@@ -1,8 +1,15 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import TournamentView from './pages/TournamentView'
+import MatchView from './pages/MatchView'
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-slate-500">MatchPoint frontend scaffold</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<TournamentView />} />
+        <Route path="/match/:matchId" element={<MatchView />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
