@@ -6,6 +6,7 @@ import ProbabilityTimeline from '../components/ProbabilityTimeline'
 import MatchPointPanel from '../components/MatchPointPanel'
 import CounterfactualPanel from '../components/CounterfactualPanel'
 import EventDetailPanel from '../components/EventDetailPanel'
+import AskAnalyst from '../components/AskAnalyst'
 import Skeleton from '../components/Skeleton'
 
 function MatchView() {
@@ -64,6 +65,7 @@ function MatchView() {
         counterfactualData={counterfactualData}
         onEventClick={setSelectedEvent}
         homeTeam={match.home_team}
+        awayTeam={match.away_team}
       />
       {selectedEvent && (
         <EventDetailPanel
@@ -83,6 +85,7 @@ function MatchView() {
           onToggle={() => setCounterfactualActive((prev) => !prev)}
         />
       </MatchPointPanel>
+      <AskAnalyst matchId={match.match_id} />
       <div className="pb-16" />
     </div>
   )

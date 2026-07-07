@@ -34,7 +34,7 @@ function TournamentStats({ summary }) {
         decimals={1}
         suffix="%"
         label="Not goals at all"
-        detail="Missed sitters, cards, and substitutions — the moment often never made the highlight reel."
+        detail="Every one of them a missed chance — the decisive moment never touched the scoreboard."
         delay={120}
       />
       <StatBoard

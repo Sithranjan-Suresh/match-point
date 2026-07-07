@@ -20,3 +20,16 @@ export function getMatches(stage) {
 export function getMatch(matchId) {
   return getJSON(`/api/matches/${matchId}`)
 }
+
+export async function askMatch(matchId, question) {
+  const res = await fetch(`${API_URL}/api/matches/${matchId}/ask`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question }),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.detail || `Request failed (${res.status})`)
+  }
+  return res.json()
+}

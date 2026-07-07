@@ -3,6 +3,8 @@ import { getMatches, getTournamentSummary } from '../api'
 import HeroFinding from '../components/HeroFinding'
 import TournamentStats from '../components/TournamentStats'
 import MinuteStrip from '../components/MinuteStrip'
+import Findings from '../components/Findings'
+import Methodology from '../components/Methodology'
 import MatchGrid from '../components/MatchGrid'
 import Skeleton from '../components/Skeleton'
 import { popScrollPosition } from '../scrollMemory'
@@ -84,7 +86,9 @@ function TournamentView() {
             <MinuteStrip matches={matches} />
           </section>
 
-          <section className="pb-24">
+          <Findings summary={tournamentSummary} />
+
+          <section className="py-20 pb-24">
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
               <div className="eyebrow">All 64 fixtures</div>
               <div className="flex items-center gap-4">
@@ -102,6 +106,8 @@ function TournamentView() {
             </div>
             <MatchGrid matches={filteredMatches} />
           </section>
+
+          <Methodology />
         </>
       )}
     </div>

@@ -45,17 +45,23 @@ function makeEventDot(matchpointEventId, onEventClick) {
   }
 }
 
-function ChartTooltip({ active, payload }) {
-  if (!active || !payload?.length) return null
-  const e = payload[0].payload
-  return (
-    <div className="border border-maroon bg-surface px-3 py-2 font-mono text-[11px] text-chalk">
-      <span className="text-gold">{e.minute}'</span>
-      {e.event_type && e.event_type !== 'Kick Off' && <> · {e.event_type}</>}
-      {e.player && <> · {e.player}</>}
-      <div className="mt-1 text-rose">home win {e.prob_home}%</div>
-    </div>
-  )
+function makeChartTooltip(homeTeam, awayTeam) {
+  return function ChartTooltip({ active, payload }) {
+    if (!active || !payload?.length) return null
+    const e = payload[0].payload
+    return (
+      <div className="border border-maroon bg-surface px-3 py-2 font-mono text-[11px] text-chalk">
+        <span className="text-gold">{e.minute}'</span>
+        {e.event_type && e.event_type !== 'Kick Off' && <> · {e.event_type}</>}
+        {e.player && <> · {e.player}</>}
+        <div className="mt-1 tabular-nums text-rose">
+          {homeTeam} {e.prob_home}%
+          {e.prob_draw != null && <> · draw {e.prob_draw}%</>}
+          {e.prob_away != null && <> · {awayTeam} {e.prob_away}%</>}
+        </div>
+      </div>
+    )
+  }
 }
 
 const LEGEND = ['Goal', 'Missed Shot', 'Yellow Card', 'Substitution']
@@ -68,9 +74,11 @@ function ProbabilityTimeline({
   counterfactualData,
   onEventClick,
   homeTeam,
+  awayTeam,
 }) {
   const annotatedEvents = timeline.filter((e) => e.annotate)
   const EventDot = makeEventDot(matchpointEventId, onEventClick)
+  const ChartTooltip = makeChartTooltip(homeTeam, awayTeam)
 
   return (
     <div className="border border-maroon-soft bg-night-2/60 p-4 md:p-6">
@@ -157,6 +165,10 @@ function ProbabilityTimeline({
           </ResponsiveContainer>
         </div>
       </div>
+
+      <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-rose/70">
+        Click any moment on the curve for its full swing
+      </p>
     </div>
   )
 }

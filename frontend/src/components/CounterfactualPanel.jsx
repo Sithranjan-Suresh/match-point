@@ -24,8 +24,9 @@ function CounterfactualPanel({ matchpoint, homeTeam, active, onToggle }) {
             {matchpoint.team}'s win probability at that moment would have been{' '}
             <strong className="font-mono text-ice">{counterfactualProb.toFixed(1)}%</strong>{' '}
             instead of <strong className="font-mono text-ice">{actualProb.toFixed(1)}%</strong>.
-            The dashed line above traces how the rest of the match would have projected from
-            that flipped state.
+            {matchpoint.counterfactual_methodology === 'proxy_shift'
+              ? ' This moment wasn’t a shot, so no score can be flipped — the figure uses a documented ±5-point adjustment rather than a full re-simulation.'
+              : ' The dashed line above traces how the rest of the match would have projected from that flipped state.'}
           </p>
           <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-rose">
             Based on xG-state Monte Carlo simulation using StatsBomb open data

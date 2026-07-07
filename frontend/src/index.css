@@ -122,6 +122,18 @@ body {
   filter: brightness(1.4);
 }
 
+/* ---------- findings bars ---------- */
+
+.bar-fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+}
+
+.is-visible .bar-fill {
+  transform: scaleX(1);
+}
+
 /* ---------- fixtures ---------- */
 
 .fixture {
@@ -217,5 +229,9 @@ body {
 
   .strip-tick {
     transform: scaleY(1) !important;
+  }
+
+  .bar-fill {
+    transform: scaleX(1) !important;
   }
 }
