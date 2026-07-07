@@ -4,15 +4,18 @@ import { getMatch } from '../api'
 import MatchHeader from '../components/MatchHeader'
 import ProbabilityTimeline from '../components/ProbabilityTimeline'
 import MatchPointPanel from '../components/MatchPointPanel'
+import CounterfactualPanel from '../components/CounterfactualPanel'
 
 function MatchView() {
   const { matchId } = useParams()
   const [match, setMatch] = useState(null)
   const [error, setError] = useState(null)
+  const [counterfactualActive, setCounterfactualActive] = useState(false)
 
   useEffect(() => {
     setMatch(null)
     setError(null)
+    setCounterfactualActive(false)
     getMatch(matchId)
       .then(setMatch)
       .catch((err) => setError(err.message))
@@ -34,7 +37,14 @@ function MatchView() {
         maxMinute={match.timeline[match.timeline.length - 1]?.minute || 90}
         matchpointEventId={match.matchpoint.event_id}
       />
-      <MatchPointPanel matchpoint={match.matchpoint} homeTeam={match.home_team} narrative={match.narrative} />
+      <MatchPointPanel matchpoint={match.matchpoint} homeTeam={match.home_team} narrative={match.narrative}>
+        <CounterfactualPanel
+          matchpoint={match.matchpoint}
+          homeTeam={match.home_team}
+          active={counterfactualActive}
+          onToggle={() => setCounterfactualActive((prev) => !prev)}
+        />
+      </MatchPointPanel>
     </div>
   )
 }
