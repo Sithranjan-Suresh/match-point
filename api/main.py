@@ -2,6 +2,8 @@
 import json
 from pathlib import Path
 
+from typing import Optional
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -46,3 +48,11 @@ def startup() -> None:
 def get_tournament() -> dict:
     """Return tournament-wide aggregate findings across all 64 matches."""
     return _tournament_summary
+
+
+@app.get("/api/matches")
+def get_matches(stage: Optional[str] = None) -> list[dict]:
+    """Return all 64 match summaries, optionally filtered by stage."""
+    if stage is None:
+        return _matches_index
+    return [m for m in _matches_index if m["stage"] == stage]
