@@ -37,9 +37,22 @@ def compute_win_probability(
 
 
 # League-average expected goals per team for a full 90 minutes, used as the
-# kickoff prior before any shot data exists for the match, and as a floor on
-# the projected scoring rate so early-match variance doesn't collapse to zero.
+# kickoff prior before any shot data exists for the match.
 AVG_XG_PER_TEAM_90 = 1.3
+
+# Equivalent "prior minutes" of league-average play blended into the observed
+# scoring rate. Without this, a single early shot (e.g. one shot's worth of xG
+# at minute 7) makes the observed rate (xg / elapsed) wildly noisy when
+# extrapolated over the remaining match — a small denominator amplifies any
+# single shot into an implausible full-match pace. Shrinking toward the prior
+# keeps early-match probability estimates stable until enough shots accumulate
+# for the observed rate to be trustworthy.
+PRIOR_MINUTES = 30
+
+
+def _projected_rate(xg: float, elapsed_minutes: int) -> float:
+    prior_xg = AVG_XG_PER_TEAM_90 / 90 * PRIOR_MINUTES
+    return (xg + prior_xg) / (elapsed_minutes + PRIOR_MINUTES)
 
 
 def _event_label(event: dict) -> str:
@@ -126,10 +139,9 @@ def walk_events(
             else:
                 score_away += 1
 
-        elapsed = max(minute, 1)
         remaining = max(max_minute - minute, 0)
-        rate_home = max(xg_home / elapsed, AVG_XG_PER_TEAM_90 / 90)
-        rate_away = max(xg_away / elapsed, AVG_XG_PER_TEAM_90 / 90)
+        rate_home = _projected_rate(xg_home, minute)
+        rate_away = _projected_rate(xg_away, minute)
 
         probs = compute_win_probability(
             score_home, score_away, rate_home * remaining, rate_away * remaining

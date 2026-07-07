@@ -1,5 +1,5 @@
 """MatchPoint detection and counterfactual simulation."""
-from win_probability import compute_win_probability, walk_events
+from win_probability import _projected_rate, compute_win_probability, walk_events
 
 HIGH_XG_MISS_THRESHOLD = 0.3
 NON_SHOT_PROXY_SHIFT = 5.0
@@ -93,10 +93,9 @@ def compute_counterfactual(
 
     minute = matchpoint["minute"]
     second = matchpoint["second"]
-    elapsed = max(minute, 1)
     remaining = max(max_minute - minute, 0)
-    rate_home = max(xg_home / elapsed, 1.3 / 90)
-    rate_away = max(xg_away / elapsed, 1.3 / 90)
+    rate_home = _projected_rate(xg_home, minute)
+    rate_away = _projected_rate(xg_away, minute)
     at_moment_probs = compute_win_probability(
         flipped_score_home, flipped_score_away, rate_home * remaining, rate_away * remaining
     )
