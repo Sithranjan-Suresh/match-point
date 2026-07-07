@@ -22,6 +22,9 @@ function CounterfactualPanel({ matchpoint, homeTeam, active, onToggle }) {
             <strong>{counterfactualProb.toFixed(1)}%</strong> instead of{' '}
             <strong>{actualProb.toFixed(1)}%</strong>.
           </p>
+          <p className="mt-2 text-xs text-slate-400" title="Methodology">
+            Based on xG-state Monte Carlo simulation using StatsBomb open data.
+          </p>
         </div>
       )}
     </div>
