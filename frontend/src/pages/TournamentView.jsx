@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getMatches, getTournamentSummary } from '../api'
+import HeroFinding from '../components/HeroFinding'
 
 function TournamentView() {
   const [tournamentSummary, setTournamentSummary] = useState(null)
@@ -20,12 +21,10 @@ function TournamentView() {
   }
 
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-2xl font-semibold text-slate-900">MatchPoint</h1>
-      <p className="text-slate-500">
-        {tournamentSummary ? `${tournamentSummary.total_matches} matches loaded` : 'Loading tournament data...'}
-      </p>
-      <p className="text-slate-500">{matches.length} match summaries loaded</p>
+    <div className="min-h-screen max-w-5xl mx-auto p-8">
+      <HeroFinding summary={tournamentSummary} />
+      {!tournamentSummary && <p className="text-slate-500">Loading tournament data...</p>}
+      <p className="text-slate-400 text-sm">{matches.length} match summaries loaded</p>
     </div>
   )
 }
