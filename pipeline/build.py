@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 
 from ingest import fetch_match_events, get_match_metadata
+from impact import compute_impact_leaderboards
 from matchpoint import compute_counterfactual, decided_on_penalties, detect_matchpoint
 from narrative import generate_narrative
 from tournament import compute_tournament_summary
@@ -128,11 +129,41 @@ def build_all() -> list[dict]:
     logger.info("Wrote matches_index.json with %d matches", len(summaries))
 
     tournament_summary = compute_tournament_summary(summaries)
+
+    match_details = []
+    for match_id in match_ids:
+        detail_path = COMPUTED_DIR / f"match_{match_id}.json"
+        if detail_path.exists():
+            with open(detail_path, "r", encoding="utf-8") as f:
+                match_details.append(json.load(f))
+    tournament_summary["impact"] = compute_impact_leaderboards(match_details)
+
     with open(COMPUTED_DIR / "tournament_summary.json", "w", encoding="utf-8") as f:
         json.dump(tournament_summary, f, ensure_ascii=False)
-    logger.info("Wrote tournament_summary.json")
+    logger.info("Wrote tournament_summary.json (with impact leaderboards)")
 
     return summaries
+
+
+def recompute_tournament_summary() -> None:
+    """Recompute tournament_summary.json (including impact leaderboards) from
+    already-built match_*.json / matches_index.json, without re-running
+    ingestion or narrative generation. Use after changing aggregate-only logic.
+    """
+    with open(COMPUTED_DIR / "matches_index.json", "r", encoding="utf-8") as f:
+        summaries = json.load(f)
+
+    tournament_summary = compute_tournament_summary(summaries)
+
+    match_details = []
+    for match_file in COMPUTED_DIR.glob("match_*.json"):
+        with open(match_file, "r", encoding="utf-8") as f:
+            match_details.append(json.load(f))
+    tournament_summary["impact"] = compute_impact_leaderboards(match_details)
+
+    with open(COMPUTED_DIR / "tournament_summary.json", "w", encoding="utf-8") as f:
+        json.dump(tournament_summary, f, ensure_ascii=False)
+    logger.info("Recomputed tournament_summary.json from %d existing matches", len(match_details))
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import HeroFinding from '../components/HeroFinding'
 import TournamentStats from '../components/TournamentStats'
 import MinuteStrip from '../components/MinuteStrip'
 import Findings from '../components/Findings'
+import Dugout from '../components/Dugout'
 import Methodology from '../components/Methodology'
 import MatchGrid from '../components/MatchGrid'
 import Skeleton from '../components/Skeleton'
@@ -90,6 +91,8 @@ function TournamentView() {
           </section>
 
           <Findings summary={tournamentSummary} />
+
+          <Dugout impact={tournamentSummary.impact} />
 
           <section className="py-20 pb-24">
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4">

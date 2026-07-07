@@ -1,4 +1,5 @@
 import Reveal from './Reveal'
+import Glossary from './Glossary'
 
 const STEPS = [
   {
@@ -9,12 +10,22 @@ const STEPS = [
   {
     n: '02',
     title: 'Simulate',
-    body: 'At every shot, card, and substitution, 10,000 Poisson-sampled futures of the remaining match are played out from the live xG state.',
+    body: (
+      <>
+        At every shot, card, and substitution, a <Glossary term="Monte Carlo simulation" /> plays
+        out the rest of the match 10,000 times from the current <Glossary term="xG" /> state.
+      </>
+    ),
   },
   {
     n: '03',
     title: 'Detect',
-    body: 'The MatchPoint is the event with the single largest swing in win probability — the moment the match tipped past return.',
+    body: (
+      <>
+        The MatchPoint is the event with the single largest swing in{' '}
+        <Glossary term="win probability" /> — the moment the match tipped past return.
+      </>
+    ),
   },
   {
     n: '04',

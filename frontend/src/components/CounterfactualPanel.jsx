@@ -1,3 +1,5 @@
+import Glossary from './Glossary'
+
 function CounterfactualPanel({ matchpoint, homeTeam, active, onToggle }) {
   const isHome = matchpoint.team === homeTeam
   const actualProb = isHome ? matchpoint.prob_home_after : matchpoint.prob_away_after
@@ -29,7 +31,8 @@ function CounterfactualPanel({ matchpoint, homeTeam, active, onToggle }) {
               : ' The dashed line above traces how the rest of the match would have projected from that flipped state.'}
           </p>
           <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-rose">
-            Based on xG-state Monte Carlo simulation using StatsBomb open data
+            Based on <Glossary term="xG" /> state <Glossary term="Monte Carlo simulation" /> using
+            StatsBomb open data
           </p>
         </div>
       )}
