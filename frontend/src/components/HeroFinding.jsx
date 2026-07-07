@@ -8,8 +8,7 @@ function HeroFinding({ summary }) {
       </p>
       <h1 className="mt-2 text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
         {summary.pct_matchpoints_before_60}% of decisive moments happened before the 60th
-        minute — and only {(100 - summary.pct_matchpoints_not_goals).toFixed(1)}% of them
-        were goals.
+        minute — and {summary.pct_matchpoints_not_goals}% of them weren't goals at all.
       </h1>
       <p className="mt-3 text-slate-500 max-w-2xl">
         Most matches are won or lost long before the scoreline reflects it. MatchPoint finds

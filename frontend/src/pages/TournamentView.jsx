@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getMatches, getTournamentSummary } from '../api'
 import HeroFinding from '../components/HeroFinding'
 import TournamentStats from '../components/TournamentStats'
+import MatchGrid from '../components/MatchGrid'
 
 function TournamentView() {
   const [tournamentSummary, setTournamentSummary] = useState(null)
@@ -26,7 +27,7 @@ function TournamentView() {
       <HeroFinding summary={tournamentSummary} />
       <TournamentStats summary={tournamentSummary} />
       {!tournamentSummary && <p className="text-slate-500">Loading tournament data...</p>}
-      <p className="text-slate-400 text-sm">{matches.length} match summaries loaded</p>
+      <MatchGrid matches={matches} />
     </div>
   )
 }
