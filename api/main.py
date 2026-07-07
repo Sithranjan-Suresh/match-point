@@ -98,17 +98,20 @@ ASK_SYSTEM_PROMPT = (
     "exactly what the data does and doesn't cover instead of guessing."
 )
 
-_ask_timestamps: deque = deque(maxlen=200)
-ASK_RATE_LIMIT_PER_MINUTE = 20
+_ask_timestamps_by_client: dict[str, deque] = {}
+ASK_RATE_LIMIT_PER_MINUTE = 10
 
 
-def _ask_rate_limited() -> bool:
+def _ask_rate_limited(client_id: str) -> bool:
+    """Per-client (IP) sliding-window rate limit, so one visitor can't starve
+    the shared demo endpoint for everyone else viewing concurrently."""
     now = time.time()
-    while _ask_timestamps and now - _ask_timestamps[0] > 60:
-        _ask_timestamps.popleft()
-    if len(_ask_timestamps) >= ASK_RATE_LIMIT_PER_MINUTE:
+    timestamps = _ask_timestamps_by_client.setdefault(client_id, deque(maxlen=ASK_RATE_LIMIT_PER_MINUTE))
+    while timestamps and now - timestamps[0] > 60:
+        timestamps.popleft()
+    if len(timestamps) >= ASK_RATE_LIMIT_PER_MINUTE:
         return True
-    _ask_timestamps.append(now)
+    timestamps.append(now)
     return False
 
 
@@ -142,7 +145,7 @@ class AskRequest(BaseModel):
 
 
 @app.post("/api/matches/{match_id}/ask")
-def ask_match(match_id: int, req: AskRequest) -> dict:
+def ask_match(match_id: int, req: AskRequest, request: Request) -> dict:
     """Answer a free-form question about a match, grounded in its simulation data."""
     detail = _match_details.get(match_id)
     if detail is None:
@@ -154,8 +157,9 @@ def ask_match(match_id: int, req: AskRequest) -> dict:
     if len(question) > 300:
         raise HTTPException(status_code=422, detail="Keep questions under 300 characters.")
 
-    if _ask_rate_limited():
-        raise HTTPException(status_code=429, detail="The analyst is busy — try again in a minute.")
+    client_id = request.client.host if request.client else "unknown"
+    if _ask_rate_limited(client_id):
+        raise HTTPException(status_code=429, detail="You're asking fast — give it a few seconds.")
 
     api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:

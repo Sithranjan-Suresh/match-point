@@ -15,7 +15,15 @@ function Footer() {
           >
             StatsBomb
           </a>{' '}
-          open data · CC BY-NC-SA 4.0
+          open data · CC BY-NC-SA 4.0 · Narratives &amp; live analyst by{' '}
+          <a
+            href="https://groq.com"
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-maroon underline-offset-4 transition-colors hover:text-gold"
+          >
+            Groq
+          </a>
         </p>
       </div>
     </footer>

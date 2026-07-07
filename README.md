@@ -93,6 +93,18 @@ npm install
 npm run dev
 ```
 
+## Testing
+
+```
+pip install -r requirements.txt
+python -m pytest tests/ -v
+```
+
+25 tests cover the win-probability engine, the MatchPoint detector, and the counterfactual
+engine — including a regression test locking in the prior-shrinkage fix for the early-match
+rate-projection bug (a single early shot used to get extrapolated into an implausible
+full-match scoring pace, distorting which moment got flagged as the MatchPoint).
+
 ## Methodology notes
 
 - Shot quality uses StatsBomb's native `shot_statsbomb_xg` — no re-trained xG model

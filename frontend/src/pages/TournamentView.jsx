@@ -83,7 +83,10 @@ function TournamentView() {
           <TournamentStats summary={tournamentSummary} />
 
           <section className="py-20">
-            <MinuteStrip matches={matches} />
+            <MinuteStrip
+              matches={matches}
+              highlightIds={query ? new Set(filteredMatches.map((m) => m.match_id)) : null}
+            />
           </section>
 
           <Findings summary={tournamentSummary} />

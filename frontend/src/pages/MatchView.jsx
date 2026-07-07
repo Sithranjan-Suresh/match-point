@@ -8,6 +8,7 @@ import CounterfactualPanel from '../components/CounterfactualPanel'
 import EventDetailPanel from '../components/EventDetailPanel'
 import AskAnalyst from '../components/AskAnalyst'
 import Skeleton from '../components/Skeleton'
+import NotFound from './NotFound'
 
 function MatchView() {
   const { matchId } = useParams()
@@ -28,6 +29,9 @@ function MatchView() {
   }, [matchId])
 
   if (error) {
+    if (error.includes('404')) {
+      return <NotFound />
+    }
     return (
       <div className="mx-auto min-h-screen max-w-6xl px-6 py-24 md:px-10">
         <p className="eyebrow">Something went wrong</p>
