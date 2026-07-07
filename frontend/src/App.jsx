@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import TournamentView from './pages/TournamentView'
 import MatchView from './pages/MatchView'
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Route path="/" element={<TournamentView />} />
         <Route path="/match/:matchId" element={<MatchView />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
