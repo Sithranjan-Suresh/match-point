@@ -11,29 +11,41 @@ import {
 } from 'recharts'
 import { eventFillColor } from '../eventColors'
 
-function makeEventDot(matchpointEventId) {
+function makeEventDot(matchpointEventId, onEventClick) {
   return function EventDot(props) {
     const { cx, cy, payload } = props
     if (cx == null || cy == null) return null
     const isMatchPoint = payload.event_id === matchpointEventId
     const color = eventFillColor(payload.event_type)
+    const handleClick = () => onEventClick?.(payload)
 
     if (isMatchPoint) {
       return (
-        <g>
+        <g onClick={handleClick} style={{ cursor: 'pointer' }}>
           <circle cx={cx} cy={cy} r={8} className="matchpoint-ring" fill="none" stroke={color} strokeWidth={2} />
           <circle cx={cx} cy={cy} r={8} fill={color} stroke="#fff" strokeWidth={2} />
         </g>
       )
     }
 
-    return <circle cx={cx} cy={cy} r={5} fill={color} stroke="#fff" strokeWidth={1.5} />
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={5}
+        fill={color}
+        stroke="#fff"
+        strokeWidth={1.5}
+        onClick={handleClick}
+        style={{ cursor: 'pointer' }}
+      />
+    )
   }
 }
 
-function ProbabilityTimeline({ timeline, maxMinute, matchpointEventId, counterfactualData }) {
+function ProbabilityTimeline({ timeline, maxMinute, matchpointEventId, counterfactualData, onEventClick }) {
   const annotatedEvents = timeline.filter((e) => e.annotate)
-  const EventDot = makeEventDot(matchpointEventId)
+  const EventDot = makeEventDot(matchpointEventId, onEventClick)
 
   return (
     <div className="w-full overflow-x-auto">
