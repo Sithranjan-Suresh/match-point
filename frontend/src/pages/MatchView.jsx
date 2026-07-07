@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { getMatch } from '../api'
 import MatchHeader from '../components/MatchHeader'
 import ProbabilityTimeline from '../components/ProbabilityTimeline'
+import MatchPointPanel from '../components/MatchPointPanel'
 
 function MatchView() {
   const { matchId } = useParams()
@@ -33,6 +34,7 @@ function MatchView() {
         maxMinute={match.timeline[match.timeline.length - 1]?.minute || 90}
         matchpointEventId={match.matchpoint.event_id}
       />
+      <MatchPointPanel matchpoint={match.matchpoint} homeTeam={match.home_team} />
     </div>
   )
 }
