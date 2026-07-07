@@ -5,6 +5,11 @@ HIGH_XG_MISS_THRESHOLD = 0.3
 NON_SHOT_PROXY_SHIFT = 5.0
 
 
+def decided_on_penalties(events: list[dict]) -> bool:
+    """A period 5 in the raw event stream indicates a penalty shootout."""
+    return any((e.get("period") or 0) == 5 for e in events)
+
+
 def detect_matchpoint(timeline: list[dict]) -> dict:
     """Return the event with the largest absolute win-probability delta.
 
