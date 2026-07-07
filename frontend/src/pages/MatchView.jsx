@@ -34,7 +34,7 @@ function MatchView() {
         maxMinute={match.timeline[match.timeline.length - 1]?.minute || 90}
         matchpointEventId={match.matchpoint.event_id}
       />
-      <MatchPointPanel matchpoint={match.matchpoint} homeTeam={match.home_team} />
+      <MatchPointPanel matchpoint={match.matchpoint} homeTeam={match.home_team} narrative={match.narrative} />
     </div>
   )
 }

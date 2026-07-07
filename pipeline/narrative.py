@@ -26,6 +26,12 @@ def _client() -> Groq:
 
 
 def build_user_prompt(match_context: dict) -> str:
+    # `delta` is the change in the HOME team's win probability; flip the sign
+    # when reporting it relative to the impacted team if that team is away.
+    team_relative_delta = (
+        match_context["delta"] if match_context["team"] == match_context["home_team"]
+        else -match_context["delta"]
+    )
     return (
         f"Match: {match_context['home_team']} vs {match_context['away_team']}, "
         f"{match_context['stage']}, 2022 World Cup\n"
@@ -34,7 +40,7 @@ def build_user_prompt(match_context: dict) -> str:
         f"{match_context['player']}, {match_context['team']}\n"
         f"Win Probability Before: {match_context['prob_home_before']}% / {match_context['prob_away_before']}%\n"
         f"Win Probability After: {match_context['prob_home_after']}% / {match_context['prob_away_after']}%\n"
-        f"Delta: {match_context['team']}'s probability changed by {match_context['delta']}%"
+        f"Delta: {match_context['team']}'s probability changed by {team_relative_delta:+.1f}%"
     )
 
 
