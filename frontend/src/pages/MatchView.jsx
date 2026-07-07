@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getMatch } from '../api'
 import MatchHeader from '../components/MatchHeader'
+import ProbabilityTimeline from '../components/ProbabilityTimeline'
 
 function MatchView() {
   const { matchId } = useParams()
@@ -27,6 +28,10 @@ function MatchView() {
   return (
     <div className="min-h-screen max-w-5xl mx-auto p-8">
       <MatchHeader match={match} />
+      <ProbabilityTimeline
+        timeline={match.timeline}
+        maxMinute={match.timeline[match.timeline.length - 1]?.minute || 90}
+      />
     </div>
   )
 }
