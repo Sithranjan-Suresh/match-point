@@ -39,6 +39,9 @@ Across all 64 matches of Qatar 2022:
 - **For the Dugout** — tournament-wide leaderboards: substitutions that paid off, substitutions
   that backfired, and an Impact Index ranking players by total win-probability swing produced
   (not just goals) — the practical-application angle for coaches and scouts
+- **Model validation** — a back-test of every prediction the model ever made (2,267 data
+  points) against real outcomes: when it said 70–80%, did that side actually win 70–80% of the
+  time? Reported with the honest number (6.7-point mean calibration error), not just a claim
 
 ## How it works
 

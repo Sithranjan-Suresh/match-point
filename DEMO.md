@@ -46,6 +46,10 @@ or not. This isn't just a highlight generator. It's a lens a coaching staff coul
 - **Why is this trustworthy, not a black box?** Every event is public StatsBomb data; the win
   probability model is a Poisson Monte Carlo simulation with a documented prior-shrinkage fix
   for early-match noise (explained in the README, tested in `tests/`).
+- **How do you know the model is actually calibrated, not just a nice curve?** Scroll to "Is
+  this actually reliable?" — every one of the 2,267 predictions the model ever made, bucketed
+  and checked against real outcomes. It's not perfect (6.7-point mean error, slightly
+  conservative in the 40–60% range) and the page says so — that honesty is the point.
 - **Why isn't every non-goal counterfactual a full re-simulation?** Cards and subs don't have a
   score to flip — the UI says so explicitly rather than pretending otherwise.
 - **What's next?** Multi-tournament validation (2018 World Cup, Champions League — same free
