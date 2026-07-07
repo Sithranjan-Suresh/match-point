@@ -6,6 +6,7 @@ import MinuteStrip from '../components/MinuteStrip'
 import Findings from '../components/Findings'
 import Dugout from '../components/Dugout'
 import Methodology from '../components/Methodology'
+import ModelValidation from '../components/ModelValidation'
 import MatchGrid from '../components/MatchGrid'
 import Skeleton from '../components/Skeleton'
 import { popScrollPosition } from '../scrollMemory'
@@ -114,6 +115,7 @@ function TournamentView() {
           </section>
 
           <Methodology />
+          <ModelValidation calibration={tournamentSummary.calibration} />
         </>
       )}
     </div>

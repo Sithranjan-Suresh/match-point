@@ -3,6 +3,7 @@ import json
 import logging
 from pathlib import Path
 
+from calibration import compute_calibration
 from ingest import fetch_match_events, get_match_metadata
 from impact import compute_impact_leaderboards
 from matchpoint import compute_counterfactual, decided_on_penalties, detect_matchpoint
@@ -137,10 +138,11 @@ def build_all() -> list[dict]:
             with open(detail_path, "r", encoding="utf-8") as f:
                 match_details.append(json.load(f))
     tournament_summary["impact"] = compute_impact_leaderboards(match_details)
+    tournament_summary["calibration"] = compute_calibration(match_details)
 
     with open(COMPUTED_DIR / "tournament_summary.json", "w", encoding="utf-8") as f:
         json.dump(tournament_summary, f, ensure_ascii=False)
-    logger.info("Wrote tournament_summary.json (with impact leaderboards)")
+    logger.info("Wrote tournament_summary.json (with impact leaderboards + calibration)")
 
     return summaries
 
@@ -160,6 +162,7 @@ def recompute_tournament_summary() -> None:
         with open(match_file, "r", encoding="utf-8") as f:
             match_details.append(json.load(f))
     tournament_summary["impact"] = compute_impact_leaderboards(match_details)
+    tournament_summary["calibration"] = compute_calibration(match_details)
 
     with open(COMPUTED_DIR / "tournament_summary.json", "w", encoding="utf-8") as f:
         json.dump(tournament_summary, f, ensure_ascii=False)

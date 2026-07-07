@@ -61,7 +61,7 @@ function Dugout({ impact }) {
 
         <Reveal delay={240}>
           <h3 className="display mb-1 text-2xl text-chalk">Impact index</h3>
-          <p className="mb-5 text-xs text-rose">Total probability swing produced, all 64 matches</p>
+          <p className="mb-5 text-xs text-rose">Win-probability swing across their events, all 64 matches</p>
           <ol>
             {impact.top_impact_players.slice(0, 5).map((p, i) => (
               <li
@@ -80,11 +80,17 @@ function Dugout({ impact }) {
             ))}
           </ol>
           <p className="mt-5 text-sm leading-relaxed text-rose">
-            Messi and Mbappé lead the tournament — the two finalists produced the largest
-            cumulative swings, goals or not.
+            Messi and Mbappé lead the tournament — the two finalists were on the ball for the
+            largest cumulative swings, goals or not.
           </p>
         </Reveal>
       </div>
+      <p className="mt-12 max-w-[70ch] font-mono text-[11px] leading-relaxed tracking-wide text-rose/80">
+        The Impact Index sums the size of the win-probability swing at every shot, card, and
+        substitution a player was directly involved in — correlation with the moment, not proof
+        they alone caused it. Treat it as "who was present for the biggest swings," not a final
+        word on individual quality.
+      </p>
     </section>
   )
 }
