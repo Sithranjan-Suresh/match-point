@@ -18,7 +18,7 @@ function TournamentStats({ summary }) {
       <StatCard
         label="MatchPoint moments were not goals"
         value={`${summary.pct_matchpoints_not_goals}%`}
-        detail="Missed shots, cards, and subs decided matches just as often as goals did"
+        detail="Missed shots, cards, and substitutions occasionally swing a match more than the eventual goal"
       />
       <StatCard
         label="Average win-probability swing"
